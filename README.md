@@ -81,13 +81,15 @@ The above sanity check proves whether the container(s) are running properly. But
 
 - Launch postman
 - Import [test suite](https://drive.google.com/file/d/17VOWY5x66-4j287ew8LefurHM8FGgbO7/view?usp=share_link)
-<img width="1513" alt="test-suite" src="https://user-images.githubusercontent.com/1165967/206560816-a3cea562-25e9-4693-9801-130e29496cbc.png">
 - In postman, you could execute the tests:
 	- collect the price data (from the provider) by executing the collection actions (5 in total)
 	- wait for a while (10 - 15) minutes, the collection interval is set to 1 minute. You could see the data collection from the logging output.
 	- get the latest price for *btcusd*
 	- get the volatility rank
 
+screenshot:
+
+<img width="1513" alt="test-suite" src="https://user-images.githubusercontent.com/1165967/206560816-a3cea562-25e9-4693-9801-130e29496cbc.png">
 
 ## Shutdown the service
 
@@ -147,7 +149,7 @@ output | `[{"pair":"btcusd","stdev":1.4990663761147605,"rank": 1},{"pair": "ethu
 ## Design
 ```mermaid
 graph TD;
-   api-->|periodic pull|data provider;
+   api-->|periodic pull|data-provider;
    api-->database;
 ```
 <<<need a system diagram>>>
