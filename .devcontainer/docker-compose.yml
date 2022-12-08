@@ -2,7 +2,7 @@ version: "3.8"
 services:
   vscode:
     user: user
-    image: query_api:latest
+    image: prices_api:latest
     volumes:
       - .:/workspace:cached
 

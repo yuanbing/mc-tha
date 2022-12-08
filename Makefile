@@ -9,6 +9,9 @@ build:
 run:
 	$(dc) up -d api
 
+shutdown:
+	$(dc) down
+
 compile-requirements:
 	$(dc) run --rm api bash -c "\
 		python -m pip install pip-tools && \
