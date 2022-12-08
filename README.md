@@ -215,5 +215,7 @@ The ingestion component can be improved:
 
 As I've mentioned earlier, I've cheated by using my own in-memory DB. It may be Okay for MVP, but definitely *NOT* for production. To be production ready, we should use a matured time series DB with good python support. [TimeScale](https://www.timescale.com/) may be such a choice.
 	
+### tests
 
+The MVP serverly lacks tests, and don't even mention code coverage. Before we could claim production ready, we need add more unit, as well as regression and integration tests.
 
