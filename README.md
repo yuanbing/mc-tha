@@ -81,7 +81,7 @@ The above sanity check proves whether the container(s) are running properly. But
 
 - Launch postman
 - Import [test suite](https://drive.google.com/file/d/17VOWY5x66-4j287ew8LefurHM8FGgbO7/view?usp=share_link)
-![screen shot of test suite](https://drive.google.com/file/d/11DCE5o6nMlHoztQ6zLbft0x2ZfmYius8/view?usp=sharing)
+<img width="1513" alt="test-suite" src="https://user-images.githubusercontent.com/1165967/206560816-a3cea562-25e9-4693-9801-130e29496cbc.png">
 - In postman, you could execute the tests:
 	- collect the price data (from the provider) by executing the collection actions (5 in total)
 	- wait for a while (10 - 15) minutes, the collection interval is set to 1 minute. You could see the data collection from the logging output.
@@ -145,6 +145,11 @@ output | `[{"pair":"btcusd","stdev":1.4990663761147605,"rank": 1},{"pair": "ethu
 # Technical details
 
 ## Design
+```mermaid
+graph TD;
+   api-->|periodic pull|data provider;
+   api-->database;
+```
 <<<need a system diagram>>>
 
 ### Components
@@ -156,5 +161,58 @@ Since the *api* component is influenced by the [requirement](https://drive.googl
 #### component: api
 
 The *api* component has three sub-components:
-- api/service entry points. this is the client facing interface that meets the [requirements](https://drive.google.com/file/d/1Z9WAjceg8AjuhaF94mqjN-yyaLmPkWfU/view?usp=sharing). 
-	- it 
+- api/service entry points
+
+this is the client facing interface that meets the [requirements](https://drive.google.com/file/d/1Z9WAjceg8AjuhaF94mqjN-yyaLmPkWfU/view?usp=sharing). 
+	- it's implemented in [app.py](https://github.com/yuanbing/mc-tha/blob/8d186dcc27ce67bbbeb398a50b80766640abd06c/src/api/app.py)
+	- it uses [FastAPI](https://fastapi.tiangolo.com/) to provide the foundation for a *RESTful* service
+	- it uses the ingest and data_access components to process the business logic according to the [requirement](https://drive.google.com/file/d/1Z9WAjceg8AjuhaF94mqjN-yyaLmPkWfU/view?usp=sharing).
+	
+- ingest
+
+The ingest is responsible for:
+	- collecting the exchange rate from the *data provider* for a particular crypto currencyminute*
+	- parsing the response from the *data provider* into [DataItem](https://github.com/yuanbing/mc-tha/blob/8d186dcc27ce67bbbeb398a50b80766640abd06c/src/model/item.py) and appending to database
+
+The collection [task](https://github.com/yuanbing/mc-tha/blob/8d186dcc27ce67bbbeb398a50b80766640abd06c/src/ingest/task.py) runs on *1 minute* interval. And there is *one* collection task per crypto currency.
+	
+- data_access
+The data access is responsible for:
+	- append/write to the DB table. the data in the table is sorted ascendingly by the time stamp;
+	- read from the DB table to:
+		- get the latest exchange rate for the specified crypto currency;
+		- calculate the standard deviation of the crypto currency for the last *24* hours.
+
+The data access is implemented in [data_access.py](https://github.com/yuanbing/mc-tha/blob/8d186dcc27ce67bbbeb398a50b80766640abd06c/src/db/data_access.py).
+	
+
+#### component: database
+
+This is one *logic" table per crypto currency whose the exchange rate being collected. The collected exchange rate may well be put into one uber table. The database should be tailored towards handling time series data. Unfortunately though, I'm not familiar with the python usage of any DB. In the past, I totally rely on the *provided* DB service.
+
+So in the end I've decided to implement my own [in-memory DB](https://github.com/yuanbing/mc-tha/blob/8d186dcc27ce67bbbeb398a50b80766640abd06c/src/db/in_memory_db.py).
+	
+In essence, the aforementioned *logic" table is implemented as a [*bounded deque*](https://github.com/yuanbing/mc-tha/blob/8d186dcc27ce67bbbeb398a50b80766640abd06c/src/db/in_memory_db.py#L31). The bound is set to be the maximum number of [DataItem](https://github.com/yuanbing/mc-tha/blob/8d186dcc27ce67bbbeb398a50b80766640abd06c/src/model/item.py). Because there is *one* item per minute. And we're only interested in the data for the last *24* hours. In other words, we only need to store up to 1440(24*60) items. In this regard, the dequre wors, more or less, like a sliding window of length 1440.
+	
+
+## Future work
+This current implemention is merely a MVP, far from production ready. To be production ready, we need several improvements:
+	
+### the api
+The current API is hardly *RESTful*: frankly speaking, it is NOT at all. For the production deployment, we might want to move towards RPC based api that is more inline with the requirement.
+	
+### ingest
+
+The ingestion component can be improved:
+- separate into a dedicated data pipeline. This pipeline can be driven by a chronous like service that triggers the ingestion on a fixed yet configurable interval;
+- currently there is one task per pair of exchange/crypto currency. Each task runs in its thread, this is *unbounded*! Since we are downloading data from the same provider, this is *NOT* efficient and may well be rated limited by the provider. For that we could:
+	- batch the pairs (of exchange/crypto currency);
+	- use connection pool (to *data provider*) to avoid rate limiting;
+	- use client side rate limiting to further reduce the possibility of being rate limited.
+
+### database
+
+As I've mentioned earlier, I've cheated by using my own in-memory DB. It may be Okay for MVP, but definitely *NOT* for production. To be production ready, we should use a matured time series DB with good python support. [TimeScale](https://www.timescale.com/) may be such a choice.
+	
+
+
