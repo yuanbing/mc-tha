@@ -152,7 +152,6 @@ graph TD;
    api-->|periodic pull|data-provider;
    api-->database;
 ```
-<<<need a system diagram>>>
 
 ### Components
 
