@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "9ad5efe2-7463-4784-9eb7-cd4fe2de9ca9",
+		"name": "MC-THA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1946560"
+	},
+	"item": [
+		{
+			"name": "Health check",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get price (btcusd)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/prices/binance-us/btcusd/price",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"prices",
+						"binance-us",
+						"btcusd",
+						"price"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "collect price data (paxgbusd)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"exchange\": \"binance-us\",\n    \"pair\": \"paxgusd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/prices/collect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"prices",
+						"collect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "collect price data (btcusd)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"exchange\": \"binance-us\",\n    \"pair\": \"btcusd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/prices/collect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"prices",
+						"collect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "collect price data (ethusd)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"exchange\": \"binance-us\",\n    \"pair\": \"ethusd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/prices/collect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"prices",
+						"collect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "collect price data (mkrusd)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"exchange\": \"binance-us\",\n    \"pair\": \"mkrusd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/prices/collect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"prices",
+						"collect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "collect price data (qntusd)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"exchange\": \"binance-us\",\n    \"pair\": \"qntusd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/prices/collect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"prices",
+						"collect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "volatility rank",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"exchange\": \"binance-us\",\n    \"pairs\": [\n        \"ethusd\",\n        \"btcusd\",\n        \"paxgusd\",\n        \"mkrusd\",\n        \"qntusd\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/prices/rank",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"prices",
+						"rank"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

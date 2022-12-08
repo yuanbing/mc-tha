@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  api:
+      image: prices_api:latest
+      ports:
+        - "8000:8000"
+      command: uvicorn --reload --host 0.0.0.0 --port 8000 api.main:app
+      volumes:
+        - .:/workspace:z
+
+  db:
+    image: timescale/timescaledb:latest-pg14
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "mypassword"
+      POSTGRES_DB: "prices_db"
