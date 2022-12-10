@@ -219,3 +219,8 @@ As I've mentioned earlier, I've cheated by using my own in-memory DB. It may be 
 
 The MVP serverly lacks tests, and don't even mention code coverage. Before we could claim production ready, we need add more unit, as well as regression and integration tests.
 
+### logging and ODS stats
+
+Currently the MVP is aslo lacking logging and ODS stats supports. From my past experience, the *well-formed* logging proves to be amongst the most effective way of mornitoring the service. A good choice of such *well-formed* format might be *standarized" JSON format. By *standarized", I mean the JSON message contains pre-defined fields so that the logging entry could be easily consumed by downstream tools like JQ in order to extract useful information such as response status and etc.
+
+On the other hand, the ODS stats, such as error rate and etc, in addition to the normal set of stats like CPU, memory usage etc, shall be collected and published or aggregated to the serivce like prometheus. Normally these stats can be used as signals to alarms should something goes wrong. 
